@@ -1,0 +1,103 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX_SEATS 50
+#define MAX_NAME_LENGTH 50
+
+typedef struct {
+    int seat_number;
+    char passenger_name[MAX_NAME_LENGTH];
+    char departure_time[MAX_NAME_LENGTH];
+} Flight;
+
+void displayMenu();
+void bookSeat(Flight flights[], int *num_seats);
+void cancelTicket(Flight flights[], int *num_seats);
+void displayDepartureTime();
+
+int main() {
+    Flight flights[MAX_SEATS];
+    int num_seats = 0;
+    int choice;
+
+    do {
+        displayMenu();
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch(choice) {
+            case 1:
+                bookSeat(flights, &num_seats);
+                break;
+            case 2:
+                cancelTicket(flights, &num_seats);
+                break;
+            case 3:
+                displayDepartureTime();
+                break;
+            case 4:
+                printf("Exiting program.\n");
+                break;
+            default:
+                printf("Invalid choice. Please try again.\n");
+        }
+    } while(choice != 4);
+
+    return 0;
+}
+
+void displayMenu() {
+    printf("\n=== Okanga Airways Flight Booking ===\n");
+    printf("1. Book a flight seat\n");
+    printf("2. Cancel a ticket\n");
+    printf("3. Display departure time\n");
+    printf("4. Exit\n");
+}
+
+void bookSeat(Flight flights[], int *num_seats) {
+    if (*num_seats >= MAX_SEATS) {
+        printf("Sorry, all seats are fully booked.\n");
+        return;
+    }
+
+    printf("Enter passenger name: ");
+    scanf("%s", flights[*num_seats].passenger_name);
+    printf("Enter seat number: ");
+    scanf("%d", &flights[*num_seats].seat_number);
+    printf("Enter departure time: ");
+    scanf("%s", flights[*num_seats].departure_time);
+
+    (*num_seats)++;
+    printf("Seat booked successfully!\n");
+}
+
+void cancelTicket(Flight flights[], int *num_seats) {
+    int seat_number, found = 0;
+    printf("Enter the seat number to cancel ticket: ");
+    scanf("%d", &seat_number);
+
+    for (int i = 0; i < *num_seats; i++) {
+        if (flights[i].seat_number == seat_number) {
+            // Shift remaining seats to fill the gap
+            for (int j = i; j < *num_seats - 1; j++) {
+                flights[j] = flights[j + 1];
+            }
+            (*num_seats)--;
+            printf("Ticket canceled successfully!\n");
+            found = 1;
+            break;
+        }
+    }
+
+    if (!found) {
+        printf("Seat number not found.\n");
+    }
+}
+
+void displayDepartureTime() {
+    printf("Departure time for Okanga Airways is as follows:\n");
+    printf("Monday to Friday: 08:00 AM, 12:00 PM, 04:00 PM\n");
+    printf("Saturday and Sunday: 10:00 AM, 02:00 PM\n");
+}
+    
